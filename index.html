@@ -24,28 +24,13 @@
             margin-top: 10px;
             cursor: pointer;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li {
-            margin: 5px 0;
-            padding: 5px 10px;
+        .output {
+            margin-top: 20px;
+            padding: 10px;
             background-color: #e9ecef;
             border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        ul li button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        ul li button:hover {
-            background-color: #0056b3;
+            font-family: monospace;
+            white-space: pre-wrap;
         }
     </style>
 </head>
@@ -58,7 +43,7 @@
     <br>
     <button onclick="extractData()">Extract Data</button>
     <h2>Extracted Data</h2>
-    <ul id="outputList"></ul>
+    <div class="output" id="outputList"></div>
 
     <script>
         function extractData() {
@@ -74,28 +59,19 @@
                 
                 // Clear previous output
                 const outputList = document.getElementById("outputList");
-                outputList.innerHTML = "";
+                outputList.textContent = "";
 
                 if (matches) {
-                    // Display extracted data
-                    matches.forEach(match => {
-                        const listItem = document.createElement("li");
-                        listItem.textContent = match;
+                    // Display extracted data as a comma-separated line
+                    const resultLine = matches.join(", ");
+                    outputList.textContent = resultLine;
 
-                        // Add copy button
-                        const copyButton = document.createElement("button");
-                        copyButton.textContent = "Copy";
-                        copyButton.onclick = () => {
-                            navigator.clipboard.writeText(match).then(() => {
-                                alert(`Copied: ${match}`);
-                            });
-                        };
-
-                        listItem.appendChild(copyButton);
-                        outputList.appendChild(listItem);
+                    // Automatically copy the result to the clipboard
+                    navigator.clipboard.writeText(resultLine).then(() => {
+                        alert("Extracted data copied to clipboard!");
                     });
                 } else {
-                    alert("No matches found. Please check your input and regex pattern.");
+                    outputList.textContent = "No matches found. Please check your input and regex pattern.";
                 }
             } catch (error) {
                 alert("Invalid regex pattern. Please check and try again.");
