@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nmap Result Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-family: monospace;
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        ul li button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        ul li button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nmap Result Extractor</h1>
+    <textarea id="inputText" placeholder="Paste your Nmap results or text here..." rows="15"></textarea>
+    <br>
+    <label for="regexPattern">Regex Pattern:</label>
+    <input type="text" id="regexPattern" value="\\d{1,5}" placeholder="Enter regex (e.g., \\d{1,5})">
+    <br>
+    <button onclick="extractData()">Extract Data</button>
+    <h2>Extracted Data</h2>
+    <ul id="outputList"></ul>
+
+    <script>
+        function extractData() {
+            // Get input text and regex pattern
+            const inputText = document.getElementById("inputText").value;
+            const regexPattern = document.getElementById("regexPattern").value;
+            
+            try {
+                // Create a regex object
+                const regex = new RegExp(regexPattern, 'g');
+                // Extract matches
+                const matches = inputText.match(regex);
+                
+                // Clear previous output
+                const outputList = document.getElementById("outputList");
+                outputList.innerHTML = "";
+
+                if (matches) {
+                    // Display extracted data
+                    matches.forEach(match => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = match;
+
+                        // Add copy button
+                        const copyButton = document.createElement("button");
+                        copyButton.textContent = "Copy";
+                        copyButton.onclick = () => {
+                            navigator.clipboard.writeText(match).then(() => {
+                                alert(`Copied: ${match}`);
+                            });
+                        };
+
+                        listItem.appendChild(copyButton);
+                        outputList.appendChild(listItem);
+                    });
+                } else {
+                    alert("No matches found. Please check your input and regex pattern.");
+                }
+            } catch (error) {
+                alert("Invalid regex pattern. Please check and try again.");
+            }
+        }
+    </script>
+</body>
+</html>
